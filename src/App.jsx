@@ -152,7 +152,6 @@ export default function App() {
           >
             <div className="w-full">
               <label className="block text-gray-700 font-medium mb-2">
-                Selecciona tipo de activo
               </label>
               <select
                 value={tipo}
@@ -160,7 +159,7 @@ export default function App() {
                 required
                 className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="">Seleccione tipo de activo</option>
+                <option value="">Seleccione tipo de equipo</option>
                 {tipos.map((t) => (
                   <option key={t} value={t}>
                     {t}
@@ -262,7 +261,7 @@ export default function App() {
     type="text"
     value={busquedaNumero}
     onChange={(e) => setBusquedaNumero(e.target.value)}
-    placeholder="Buscar por número de activo"
+    placeholder="Buscar por el número de equipo"
     className="p-2 border rounded-lg"
   />
   <div>
