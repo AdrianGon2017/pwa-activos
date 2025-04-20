@@ -46,6 +46,9 @@ export default function App() {
       ? "N° Amplificador"
       : "N° Equipo";
 
+  // Solo el desarrollador podrá agregar fallas
+  const isDeveloper = true; // Esto puede ser una variable de entorno en el futuro
+
   const guardarActivo = async (e) => {
     e.preventDefault();
     if (!tipo || !numero || !ubicacion || !estado || !fechaIngreso) return;
@@ -193,7 +196,7 @@ export default function App() {
             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
-          {estado === "En falla" && (
+          {estado === "En falla" && isDeveloper && (
             <div className="w-full mt-4">
               <label className="block text-gray-700 font-medium mb-2">
                 Selecciona tipo de falla
@@ -287,30 +290,28 @@ export default function App() {
                 <th className="border-2 px-4 py-2 text-center">N° Equipo</th>
                 <th className="border-2 px-4 py-2 text-center">Ubicación</th>
                 <th className="border-2 px-4 py-2 text-center">Estado</th>
-                <th className="border-2 px-4 py-2 text-center">Fecha</th>
-                <th className="border-2 px-4 py-2 text-center">Comentario</th>
+                <th className="border-2 px-4 py-2 text-center">Fecha Ingreso</th>
                 <th className="border-2 px-4 py-2 text-center">Acciones</th>
               </tr>
             </thead>
             <tbody>
               {activos.map((activo) => (
-                <tr key={activo.id} className="text-center">
-                  <td className="border px-4 py-2 text-center">{activo.tipo}</td>
-                  <td className="border px-4 py-2 text-center">{activo.numero}</td>
-                  <td className="border px-4 py-2 text-center">{activo.ubicacion}</td>
-                  <td className="border px-4 py-2 text-center">{activo.estado}</td>
-                  <td className="border px-4 py-2 text-center">{activo.fechaIngreso}</td>
-                  <td className="border px-4 py-2 text-center">{activo.comentario || activo.comentarioFalla}</td>
-                  <td className="border px-4 py-2 space-x-2 text-center">
+                <tr key={activo.id}>
+                  <td className="border-2 px-4 py-2 text-center">{activo.tipo}</td>
+                  <td className="border-2 px-4 py-2 text-center">{activo.numero}</td>
+                  <td className="border-2 px-4 py-2 text-center">{activo.ubicacion}</td>
+                  <td className="border-2 px-4 py-2 text-center">{activo.estado}</td>
+                  <td className="border-2 px-4 py-2 text-center">{activo.fechaIngreso}</td>
+                  <td className="border-2 px-4 py-2 text-center">
                     <button
                       onClick={() => editar(activo)}
-                      className="bg-yellow-400 px-3 py-1 rounded hover:bg-yellow-500"
+                      className="px-4 py-2 bg-yellow-500 text-white rounded-lg mr-2"
                     >
                       Editar
                     </button>
                     <button
                       onClick={() => eliminarActivo(activo.id)}
-                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                      className="px-4 py-2 bg-red-500 text-white rounded-lg"
                     >
                       Eliminar
                     </button>
