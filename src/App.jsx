@@ -138,8 +138,8 @@ export default function App() {
         {/* Botón para alternar visibilidad del formulario */}
         <button
           onClick={() => setMostrarFormulario(!mostrarFormulario)}
-            style={{ width: '24px', height: '24px' }}  // Forzando el tamaño con estilos en línea
-            className="fixed top-1/7 left-0 transform -translate-y-1/2 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-blue-700 transition-colors"
+               style={{ width: '24px', height: '24px' }}  // Forzando el tamaño con estilos en línea
+                className="fixed top-1/8 right-0 transform -translate-y-1/2 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-blue-700 transition-colors"
         >
           {mostrarFormulario ? "-" : "+"}
         </button>
@@ -257,71 +257,100 @@ export default function App() {
 
         {/* Tabla de activos */}
         <div className="mt-10">
-          <div className="flex justify-between mb-4">
-            <input
-              type="text"
-              value={busquedaNumero}
-              onChange={(e) => setBusquedaNumero(e.target.value)}
-              placeholder="Buscar por número de activo"
-              className="p-2 border rounded-lg"
-            />
-            <div>
-              <label className="mr-2">Mostrar fallas:</label>
-              <input
-                type="checkbox"
-                checked={mostrarSoloConFalla}
-                onChange={() => setMostrarSoloConFalla(!mostrarSoloConFalla)}
-              />
-            </div>
-            <div>
-              <label className="mr-2">Mostrar observación:</label>
-              <input
-                type="checkbox"
-                checked={mostrarSoloEnObservacion}
-                onChange={() => setMostrarSoloEnObservacion(!mostrarSoloEnObservacion)}
-              />
-            </div>
-          </div>
+        <div className="flex justify-between mb-4">
+  <input
+    type="text"
+    value={busquedaNumero}
+    onChange={(e) => setBusquedaNumero(e.target.value)}
+    placeholder="Buscar por número de activo"
+    className="p-2 border rounded-lg"
+  />
+  <div>
+    <label className="mr-2">Equipos en fallas:</label>
+    <input
+      type="checkbox"
+      checked={mostrarSoloConFalla}
+      onChange={() => {
+        setMostrarSoloConFalla(!mostrarSoloConFalla); // Alternar estado de "Mostrar fallas"
+        if (mostrarSoloConFalla) {
+          setMostrarSoloEnObservacion(false); // Si desmarcas "Mostrar fallas", permite mostrar todo
+        }
+      }}
+    />
+  </div>
+  <div>
+    <label className="mr-2">Equipos en observación:</label>
+    <input
+      type="checkbox"
+      checked={mostrarSoloEnObservacion}
+      onChange={() => {
+        setMostrarSoloEnObservacion(!mostrarSoloEnObservacion); // Alternar estado de "Mostrar observación"
+        if (mostrarSoloEnObservacion) {
+          setMostrarSoloConFalla(false); // Si desmarcas "Mostrar observación", permite mostrar todo
+        }
+      }}
+    />
+  </div>
+</div>
 
           <table className="min-w-full table-auto">
-            <thead>
-              <tr>
-                <th className="px-4 py-2 border-b">Tipo</th>
-                <th className="px-4 py-2 border-b">Número</th>
-                <th className="px-4 py-2 border-b">Ubicación</th>
-                <th className="px-4 py-2 border-b">Estado</th>
-                <th className="px-4 py-2 border-b">Fecha de Ingreso</th>
-                <th className="px-4 py-2 border-b">Comentario</th>
-                <th className="px-4 py-2 border-b">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {activos.map((activo) => (
-                <tr key={activo.id}>
-                  <td className="px-4 py-2 border-b">{activo.tipo}</td>
-                  <td className="px-4 py-2 border-b">{activo.numero}</td>
-                  <td className="px-4 py-2 border-b">{activo.ubicacion}</td>
-                  <td className="px-4 py-2 border-b">{activo.estado}</td>
-                  <td className="px-4 py-2 border-b">{activo.fechaIngreso}</td>
-                  <td className="px-4 py-2 border-b">{activo.comentario}</td>
-                  <td className="px-4 py-2 border-b">
-                    <button
-                      onClick={() => editar(activo)}
-                      className="bg-blue-500 text-white px-3 py-1 rounded mr-2"
-                    >
-                      Editar
-                    </button>
-                    <button
-                      onClick={() => eliminarActivo(activo.id)}
-                      className="bg-red-500 text-white px-3 py-1 rounded"
-                    >
-                      Eliminar
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+  <thead>
+    <tr>
+      <th className="px-4 py-2 border-b text-center">Tipo</th>
+      <th className="px-4 py-2 border-b text-center">Número</th>
+      <th className="px-4 py-2 border-b text-center">Ubicación</th>
+      <th className="px-4 py-2 border-b text-center">Estado</th>
+      <th className="px-4 py-2 border-b text-center">Fecha de Ingreso</th>
+      <th className="px-4 py-2 border-b text-center">Comentario</th> {/* Columna comentario */}
+      <th className="px-4 py-2 border-b text-center">Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {activos.map((activo) => (
+      <tr key={activo.id}>
+        <td className="px-4 py-2 border-b text-center">{activo.tipo}</td>
+        <td className="px-4 py-2 border-b text-center">{activo.numero}</td>
+        <td className="px-4 py-2 border-b text-center">{activo.ubicacion}</td>
+        <td className="px-4 py-2 border-b text-center">{activo.estado}</td>
+        <td className="px-4 py-2 border-b text-center">{activo.fechaIngreso}</td>
+
+        {/* Columna de Comentario */}
+        <td className="px-4 py-2 border-b text-center">
+  {activo.estado === "En falla" ? (
+    // Si el activo está "En falla", se muestra el comentario de falla
+    activo.comentarioFalla && activo.comentarioFalla !== "" ? (
+      `${activo.comentarioFalla} (${activo.comentario || "Comentario opcional"})`
+    ) : (
+      // Si no tiene comentario de falla, se muestra "Comentario opcional"
+      "Comentario opcional"
+    )
+  ) : (
+    // Si el activo no está "En falla", se muestra el comentario normal
+    activo.comentario && activo.comentario !== "" ? (
+      activo.comentario
+    ) : (
+      "No aplica" // Si no tiene comentario, muestra "No aplica"
+    )
+  )}
+</td>
+<td className="px-4 py-2 border-b text-center">
+  <button
+    onClick={() => editar(activo)}
+    className="bg-blue-500 text-white px-3 py-1 rounded mr-2 hover:bg-blue-600 transition-colors"
+  >
+    Editar
+  </button>
+  <button
+    onClick={() => eliminarActivo(activo.id)}
+    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition-colors"
+  >
+    Eliminar
+  </button>
+</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
         </div>
       </div>
     </div>
