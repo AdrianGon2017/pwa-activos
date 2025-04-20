@@ -25,7 +25,7 @@ export default function App() {
   const [busquedaNumero, setBusquedaNumero] = useState("");
   const [activos, setActivos] = useState([]);
   const [editarActivo, setEditarActivo] = useState(null);
-  const [mostrarFormulario, setMostrarFormulario] = useState(true); // Nuevo estado para controlar la visibilidad del formulario
+  const [mostrarFormulario, setMostrarFormulario] = useState(false); // El formulario está oculto por defecto
 
   const tipos = ["Cámara", "Lector", "CPU", "Estación de llamadas", "Amplificador"];
   const fallas = [
@@ -138,16 +138,17 @@ export default function App() {
         {/* Botón para alternar visibilidad del formulario */}
         <button
           onClick={() => setMostrarFormulario(!mostrarFormulario)}
-          className="mb-6 w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            style={{ width: '24px', height: '24px' }}  // Forzando el tamaño con estilos en línea
+            className="fixed top-1/7 left-0 transform -translate-y-1/2 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-blue-700 transition-colors"
         >
-          {mostrarFormulario ? "Ocultar Formulario" : "Mostrar Formulario"}
+          {mostrarFormulario ? "-" : "+"}
         </button>
 
         {/* Condicional para mostrar el formulario */}
         {mostrarFormulario && (
           <form
             onSubmit={guardarActivo}
-            className="space-y-4 w-full md:w-3/4 lg:w-2/3 mx-auto"
+            className="space-y-4 w-full md:w-3/4 lg:w-2/3 mx-auto mt-10"
           >
             <div className="w-full">
               <label className="block text-gray-700 font-medium mb-2">
@@ -254,76 +255,65 @@ export default function App() {
           </form>
         )}
 
-        <div className="mt-6 flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6 justify-center">
-          <label className="flex items-center space-x-2">
+        {/* Tabla de activos */}
+        <div className="mt-10">
+          <div className="flex justify-between mb-4">
             <input
-              type="checkbox"
-              checked={mostrarSoloConFalla}
-              onChange={(e) => {
-                setMostrarSoloConFalla(e.target.checked);
-                if (e.target.checked) setMostrarSoloEnObservacion(false);
-              }}
-              className="form-checkbox"
+              type="text"
+              value={busquedaNumero}
+              onChange={(e) => setBusquedaNumero(e.target.value)}
+              placeholder="Buscar por número de activo"
+              className="p-2 border rounded-lg"
             />
-            <span>Mostrar solo en falla</span>
-          </label>
+            <div>
+              <label className="mr-2">Mostrar fallas:</label>
+              <input
+                type="checkbox"
+                checked={mostrarSoloConFalla}
+                onChange={() => setMostrarSoloConFalla(!mostrarSoloConFalla)}
+              />
+            </div>
+            <div>
+              <label className="mr-2">Mostrar observación:</label>
+              <input
+                type="checkbox"
+                checked={mostrarSoloEnObservacion}
+                onChange={() => setMostrarSoloEnObservacion(!mostrarSoloEnObservacion)}
+              />
+            </div>
+          </div>
 
-          <label className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              checked={mostrarSoloEnObservacion}
-              onChange={(e) => {
-                setMostrarSoloEnObservacion(e.target.checked);
-                if (e.target.checked) setMostrarSoloConFalla(false);
-              }}
-              className="form-checkbox"
-            />
-            <span>Mostrar en observación</span>
-          </label>
-        </div>
-
-        <div className="mt-4 flex justify-center">
-          <input
-            type="text"
-            placeholder="Buscar por número"
-            value={busquedaNumero}
-            onChange={(e) => setBusquedaNumero(e.target.value)}
-            className="w-full p-3 border rounded-lg max-w-md"
-          />
-        </div>
-
-        <div className="mt-6 overflow-x-auto">
-          <table className="w-full border-collapse shadow-md mx-auto">
-            <thead className="bg-blue-100">
+          <table className="min-w-full table-auto">
+            <thead>
               <tr>
-                <th className="border-2 px-4 py-2 text-center">Tipo</th>
-                <th className="border-2 px-4 py-2 text-center">N° Equipo</th>
-                <th className="border-2 px-4 py-2 text-center">Ubicación</th>
-                <th className="border-2 px-4 py-2 text-center">Estado</th>
-                <th className="border-2 px-4 py-2 text-center">Fecha</th>
-                <th className="border-2 px-4 py-2 text-center">Comentario</th>
-                <th className="border-2 px-4 py-2 text-center">Acciones</th>
+                <th className="px-4 py-2 border-b">Tipo</th>
+                <th className="px-4 py-2 border-b">Número</th>
+                <th className="px-4 py-2 border-b">Ubicación</th>
+                <th className="px-4 py-2 border-b">Estado</th>
+                <th className="px-4 py-2 border-b">Fecha de Ingreso</th>
+                <th className="px-4 py-2 border-b">Comentario</th>
+                <th className="px-4 py-2 border-b">Acciones</th>
               </tr>
             </thead>
             <tbody>
               {activos.map((activo) => (
-                <tr key={activo.id} className="text-center">
-                  <td className="border px-4 py-2 text-center">{activo.tipo}</td>
-                  <td className="border px-4 py-2 text-center">{activo.numero}</td>
-                  <td className="border px-4 py-2 text-center">{activo.ubicacion}</td>
-                  <td className="border px-4 py-2 text-center">{activo.estado}</td>
-                  <td className="border px-4 py-2 text-center">{activo.fechaIngreso}</td>
-                  <td className="border px-4 py-2 text-center">{activo.comentario || activo.comentarioFalla}</td>
-                  <td className="border px-4 py-2 space-x-2 text-center">
+                <tr key={activo.id}>
+                  <td className="px-4 py-2 border-b">{activo.tipo}</td>
+                  <td className="px-4 py-2 border-b">{activo.numero}</td>
+                  <td className="px-4 py-2 border-b">{activo.ubicacion}</td>
+                  <td className="px-4 py-2 border-b">{activo.estado}</td>
+                  <td className="px-4 py-2 border-b">{activo.fechaIngreso}</td>
+                  <td className="px-4 py-2 border-b">{activo.comentario}</td>
+                  <td className="px-4 py-2 border-b">
                     <button
                       onClick={() => editar(activo)}
-                      className="bg-yellow-400 px-3 py-1 rounded hover:bg-yellow-500"
+                      className="bg-blue-500 text-white px-3 py-1 rounded mr-2"
                     >
                       Editar
                     </button>
                     <button
                       onClick={() => eliminarActivo(activo.id)}
-                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                      className="bg-red-500 text-white px-3 py-1 rounded"
                     >
                       Eliminar
                     </button>

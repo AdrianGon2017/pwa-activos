@@ -90,19 +90,46 @@ select {
 table {
   table-layout: fixed; /* Hace que las celdas tengan el mismo tamaño */
   width: 100%; /* Asegura que la tabla ocupe todo el ancho */
+  border-collapse: collapse; /* Elimina los espacios entre celdas */
 }
 
 th, td {
   word-wrap: break-word; /* Permite que el texto largo se ajuste */
   text-overflow: ellipsis; /* Agrega puntos suspensivos si el texto es demasiado largo */
   padding: 0.75rem; /* Agrega espaciado dentro de las celdas */
+  border: 1px solid #dddddd; /* Bordes claros para las celdas */
 }
 
 th {
   text-align: left; /* Alineación del texto en los encabezados */
+  background-color: #f1f1f1; /* Fondo suave para los encabezados */
+  color: #333333; /* Texto oscuro para los encabezados */
 }
 
 td {
   text-align: left; /* Alineación del texto en las celdas */
+}
+
+/* Resaltar filas al pasar el mouse */
+tr:hover {
+  background-color: #f9f9f9; /* Fondo suave al pasar el cursor por encima de una fila */
+}
+
+/* Ajustes de color para esquema oscuro */
+@media (prefers-color-scheme: dark) {
+  :root {
+    background-color: #1a1a1a;
+    color: rgba(255, 255, 255, 0.87);
+  }
+  th {
+    background-color: #333333; /* Fondo oscuro para los encabezados */
+    color: #ffffff; /* Texto claro para los encabezados en modo oscuro */
+  }
+  td {
+    background-color: #2a2a2a; /* Fondo oscuro para las celdas */
+  }
+  tr:hover {
+    background-color: #444444; /* Fondo al pasar el mouse en modo oscuro */
+  }
 }
 
