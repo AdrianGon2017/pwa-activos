@@ -139,7 +139,7 @@ export default function App() {
         <button
           onClick={() => setMostrarFormulario(!mostrarFormulario)}
                style={{ width: '24px', height: '24px' }}  // Forzando el tamaño con estilos en línea
-                className="fixed top-1/8 right-0 transform -translate-y-1/2 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-blue-700 transition-colors"
+                className="fixed top-1/10 right-0 transform -translate-y-1/2 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-blue-700 transition-colors"
         >
           {mostrarFormulario ? "-" : "+"}
         </button>
