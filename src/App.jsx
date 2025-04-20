@@ -19,7 +19,7 @@ export default function App() {
   const [estado, setEstado] = useState("");
   const [fechaIngreso, setFechaIngreso] = useState("");
   const [comentario, setComentario] = useState("");
-  const [comentarioFalla, setComentarioFalla] = useState(""); // Cambiado a cadena
+  const [comentarioFalla, setComentarioFalla] = useState("");
   const [mostrarSoloConFalla, setMostrarSoloConFalla] = useState(false);
   const [mostrarSoloEnObservacion, setMostrarSoloEnObservacion] = useState(false);
   const [busquedaNumero, setBusquedaNumero] = useState("");
@@ -75,7 +75,7 @@ export default function App() {
       setEstado("");
       setFechaIngreso("");
       setComentario("");
-      setComentarioFalla(""); // Resetear el comentarioFalla
+      setComentarioFalla("");
       obtenerActivos();
     } catch (error) {
       console.error("Error al guardar el activo:", error);
@@ -121,7 +121,7 @@ export default function App() {
     setEstado(activo.estado);
     setFechaIngreso(activo.fechaIngreso);
     setComentario(activo.comentario);
-    setComentarioFalla(activo.comentarioFalla || ""); // Cambiado a cadena
+    setComentarioFalla(activo.comentarioFalla || "");
     setEditarActivo(activo);
   };
 
@@ -199,8 +199,8 @@ export default function App() {
                 Selecciona tipo de falla
               </label>
               <select
-                value={comentarioFalla} // Cambio aquí para que sea solo un valor
-                onChange={(e) => setComentarioFalla(e.target.value)} // Solo un valor
+                value={comentarioFalla}
+                onChange={(e) => setComentarioFalla(e.target.value)}
                 className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">Seleccione tipo de falla</option>
@@ -210,9 +210,22 @@ export default function App() {
                   </option>
                 ))}
               </select>
-
               <textarea
                 placeholder="Comentario de falla (opcional)"
+                value={comentario}
+                onChange={(e) => setComentario(e.target.value)}
+                className="w-full p-3 border rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          )}
+
+          {estado === "En observación" && (
+            <div className="w-full mt-4">
+              <label className="block text-gray-700 font-medium mb-2">
+                Comentario de observación (opcional)
+              </label>
+              <textarea
+                placeholder="Comentario sobre la observación"
                 value={comentario}
                 onChange={(e) => setComentario(e.target.value)}
                 className="w-full p-3 border rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -274,35 +287,30 @@ export default function App() {
                 <th className="border-2 px-4 py-2 text-center">N° Equipo</th>
                 <th className="border-2 px-4 py-2 text-center">Ubicación</th>
                 <th className="border-2 px-4 py-2 text-center">Estado</th>
-                <th className="border-2 px-4 py-2 text-center">Fecha de Ingreso</th>
+                <th className="border-2 px-4 py-2 text-center">Fecha</th>
                 <th className="border-2 px-4 py-2 text-center">Comentario</th>
                 <th className="border-2 px-4 py-2 text-center">Acciones</th>
               </tr>
             </thead>
             <tbody>
               {activos.map((activo) => (
-                <tr key={activo.id} className="odd:bg-white even:bg-gray-50">
-                  <td className="border-2 px-4 py-2">{activo.tipo}</td>
-                  <td className="border-2 px-4 py-2">{activo.numero}</td>
-                  <td className="border-2 px-4 py-2">{activo.ubicacion}</td>
-                  <td className="border-2 px-4 py-2">{activo.estado}</td>
-                  <td className="border-2 px-4 py-2">{activo.fechaIngreso}</td>
-                  <td className="border-2 px-4 py-2">
-                    {Array.isArray(activo.comentarioFalla)
-                      ? activo.comentarioFalla.join(", ")
-                      : activo.comentarioFalla}
-                    {activo.comentario && ` (${activo.comentario})`}
-                  </td>
-                  <td className="border-2 px-4 py-2 space-x-2">
+                <tr key={activo.id} className="text-center">
+                  <td className="border px-4 py-2 text-center">{activo.tipo}</td>
+                  <td className="border px-4 py-2 text-center">{activo.numero}</td>
+                  <td className="border px-4 py-2 text-center">{activo.ubicacion}</td>
+                  <td className="border px-4 py-2 text-center">{activo.estado}</td>
+                  <td className="border px-4 py-2 text-center">{activo.fechaIngreso}</td>
+                  <td className="border px-4 py-2 text-center">{activo.comentario || activo.comentarioFalla}</td>
+                  <td className="border px-4 py-2 space-x-2 text-center">
                     <button
                       onClick={() => editar(activo)}
-                      className="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-2 rounded"
+                      className="bg-yellow-400 px-3 py-1 rounded hover:bg-yellow-500"
                     >
                       Editar
                     </button>
                     <button
                       onClick={() => eliminarActivo(activo.id)}
-                      className="bg-red-500 hover:bg-red-600 text-white py-1 px-2 rounded"
+                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
                     >
                       Eliminar
                     </button>
