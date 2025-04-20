@@ -25,6 +25,7 @@ export default function App() {
   const [busquedaNumero, setBusquedaNumero] = useState("");
   const [activos, setActivos] = useState([]);
   const [editarActivo, setEditarActivo] = useState(null);
+  const [mostrarFormulario, setMostrarFormulario] = useState(true); // Nuevo estado para controlar la visibilidad del formulario
 
   const tipos = ["Cámara", "Lector", "CPU", "Estación de llamadas", "Amplificador"];
   const fallas = [
@@ -45,9 +46,6 @@ export default function App() {
       : tipo === "Amplificador"
       ? "N° Amplificador"
       : "N° Equipo";
-
-  // Solo el desarrollador podrá agregar fallas
-  const isDeveloper = true; // Esto puede ser una variable de entorno en el futuro
 
   const guardarActivo = async (e) => {
     e.preventDefault();
@@ -136,113 +134,125 @@ export default function App() {
     <div className="min-h-screen bg-gray-100 flex justify-center items-start py-10 px-4">
       <div className="w-full max-w-4xl bg-white p-6 rounded-lg shadow-lg">
         <h1 className="text-3xl font-bold text-center mb-6">Registro de Fallas</h1>
-        <form
-          onSubmit={guardarActivo}
-          className="space-y-4 w-full md:w-3/4 lg:w-2/3 mx-auto"
+
+        {/* Botón para alternar visibilidad del formulario */}
+        <button
+          onClick={() => setMostrarFormulario(!mostrarFormulario)}
+          className="mb-6 w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
-          <div className="w-full">
-            <label className="block text-gray-700 font-medium mb-2">
-              Selecciona tipo de activo
-            </label>
-            <select
-              value={tipo}
-              onChange={(e) => setTipo(e.target.value)}
-              required
-              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">Seleccione tipo de activo</option>
-              {tipos.map((t) => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
-            </select>
-          </div>
+          {mostrarFormulario ? "Ocultar Formulario" : "Mostrar Formulario"}
+        </button>
 
-          <input
-            type="text"
-            placeholder={campoNumeroLabel}
-            value={numero}
-            onChange={(e) => setNumero(e.target.value)}
-            required
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-
-          <input
-            type="text"
-            placeholder="Ubicación"
-            value={ubicacion}
-            onChange={(e) => setUbicacion(e.target.value)}
-            required
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-
-          <select
-            value={estado}
-            onChange={(e) => setEstado(e.target.value)}
-            required
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        {/* Condicional para mostrar el formulario */}
+        {mostrarFormulario && (
+          <form
+            onSubmit={guardarActivo}
+            className="space-y-4 w-full md:w-3/4 lg:w-2/3 mx-auto"
           >
-            <option value="">Seleccione estado</option>
-            <option value="En observación">En observación</option>
-            <option value="En falla">En falla</option>
-          </select>
-
-          <input
-            type="date"
-            value={fechaIngreso}
-            onChange={(e) => setFechaIngreso(e.target.value)}
-            required
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-
-          {estado === "En falla" && isDeveloper && (
-            <div className="w-full mt-4">
+            <div className="w-full">
               <label className="block text-gray-700 font-medium mb-2">
-                Selecciona tipo de falla
+                Selecciona tipo de activo
               </label>
               <select
-                value={comentarioFalla}
-                onChange={(e) => setComentarioFalla(e.target.value)}
+                value={tipo}
+                onChange={(e) => setTipo(e.target.value)}
+                required
                 className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="">Seleccione tipo de falla</option>
-                {fallas.map((falla) => (
-                  <option key={falla} value={falla}>
-                    {falla}
+                <option value="">Seleccione tipo de activo</option>
+                {tipos.map((t) => (
+                  <option key={t} value={t}>
+                    {t}
                   </option>
                 ))}
               </select>
-              <textarea
-                placeholder="Comentario de falla (opcional)"
-                value={comentario}
-                onChange={(e) => setComentario(e.target.value)}
-                className="w-full p-3 border rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
             </div>
-          )}
 
-          {estado === "En observación" && (
-            <div className="w-full mt-4">
-              <label className="block text-gray-700 font-medium mb-2">
-                Comentario de observación (opcional)
-              </label>
-              <textarea
-                placeholder="Comentario sobre la observación"
-                value={comentario}
-                onChange={(e) => setComentario(e.target.value)}
-                className="w-full p-3 border rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          )}
+            <input
+              type="text"
+              placeholder={campoNumeroLabel}
+              value={numero}
+              onChange={(e) => setNumero(e.target.value)}
+              required
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
 
-          <button
-            type="submit"
-            className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            {editarActivo ? "Actualizar activo" : "Guardar activo"}
-          </button>
-        </form>
+            <input
+              type="text"
+              placeholder="Ubicación"
+              value={ubicacion}
+              onChange={(e) => setUbicacion(e.target.value)}
+              required
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
+            <select
+              value={estado}
+              onChange={(e) => setEstado(e.target.value)}
+              required
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Seleccione estado</option>
+              <option value="En observación">En observación</option>
+              <option value="En falla">En falla</option>
+            </select>
+
+            <input
+              type="date"
+              value={fechaIngreso}
+              onChange={(e) => setFechaIngreso(e.target.value)}
+              required
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
+            {estado === "En falla" && (
+              <div className="w-full mt-4">
+                <label className="block text-gray-700 font-medium mb-2">
+                  Selecciona tipo de falla
+                </label>
+                <select
+                  value={comentarioFalla}
+                  onChange={(e) => setComentarioFalla(e.target.value)}
+                  className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Seleccione tipo de falla</option>
+                  {fallas.map((falla) => (
+                    <option key={falla} value={falla}>
+                      {falla}
+                    </option>
+                  ))}
+                </select>
+                <textarea
+                  placeholder="Comentario de falla (opcional)"
+                  value={comentario}
+                  onChange={(e) => setComentario(e.target.value)}
+                  className="w-full p-3 border rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            )}
+
+            {estado === "En observación" && (
+              <div className="w-full mt-4">
+                <label className="block text-gray-700 font-medium mb-2">
+                  Comentario de observación (opcional)
+                </label>
+                <textarea
+                  placeholder="Comentario sobre la observación"
+                  value={comentario}
+                  onChange={(e) => setComentario(e.target.value)}
+                  className="w-full p-3 border rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              {editarActivo ? "Actualizar activo" : "Guardar activo"}
+            </button>
+          </form>
+        )}
 
         <div className="mt-6 flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6 justify-center">
           <label className="flex items-center space-x-2">
@@ -290,28 +300,30 @@ export default function App() {
                 <th className="border-2 px-4 py-2 text-center">N° Equipo</th>
                 <th className="border-2 px-4 py-2 text-center">Ubicación</th>
                 <th className="border-2 px-4 py-2 text-center">Estado</th>
-                <th className="border-2 px-4 py-2 text-center">Fecha Ingreso</th>
+                <th className="border-2 px-4 py-2 text-center">Fecha</th>
+                <th className="border-2 px-4 py-2 text-center">Comentario</th>
                 <th className="border-2 px-4 py-2 text-center">Acciones</th>
               </tr>
             </thead>
             <tbody>
               {activos.map((activo) => (
-                <tr key={activo.id}>
-                  <td className="border-2 px-4 py-2 text-center">{activo.tipo}</td>
-                  <td className="border-2 px-4 py-2 text-center">{activo.numero}</td>
-                  <td className="border-2 px-4 py-2 text-center">{activo.ubicacion}</td>
-                  <td className="border-2 px-4 py-2 text-center">{activo.estado}</td>
-                  <td className="border-2 px-4 py-2 text-center">{activo.fechaIngreso}</td>
-                  <td className="border-2 px-4 py-2 text-center">
+                <tr key={activo.id} className="text-center">
+                  <td className="border px-4 py-2 text-center">{activo.tipo}</td>
+                  <td className="border px-4 py-2 text-center">{activo.numero}</td>
+                  <td className="border px-4 py-2 text-center">{activo.ubicacion}</td>
+                  <td className="border px-4 py-2 text-center">{activo.estado}</td>
+                  <td className="border px-4 py-2 text-center">{activo.fechaIngreso}</td>
+                  <td className="border px-4 py-2 text-center">{activo.comentario || activo.comentarioFalla}</td>
+                  <td className="border px-4 py-2 space-x-2 text-center">
                     <button
                       onClick={() => editar(activo)}
-                      className="px-4 py-2 bg-yellow-500 text-white rounded-lg mr-2"
+                      className="bg-yellow-400 px-3 py-1 rounded hover:bg-yellow-500"
                     >
                       Editar
                     </button>
                     <button
                       onClick={() => eliminarActivo(activo.id)}
-                      className="px-4 py-2 bg-red-500 text-white rounded-lg"
+                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
                     >
                       Eliminar
                     </button>
