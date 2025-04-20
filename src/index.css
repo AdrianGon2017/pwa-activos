@@ -70,3 +70,39 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* Ajustar la altura de los campos de texto y textarea */
+textarea {
+  resize: vertical; /* Solo permite el redimensionamiento vertical */
+  overflow-y: auto; /* Agrega scrollbar vertical si es necesario */
+  max-height: 200px; /* Limita la altura máxima */
+}
+
+/* Ajuste para los inputs y selects */
+input[type="text"],
+input[type="date"],
+select {
+  width: 100%; /* Hace que los inputs y selects ocupen el ancho completo */
+  box-sizing: border-box; /* Asegura que el padding y border no afecten el tamaño total */
+}
+
+/* Ajustes para la tabla */
+table {
+  table-layout: fixed; /* Hace que las celdas tengan el mismo tamaño */
+  width: 100%; /* Asegura que la tabla ocupe todo el ancho */
+}
+
+th, td {
+  word-wrap: break-word; /* Permite que el texto largo se ajuste */
+  text-overflow: ellipsis; /* Agrega puntos suspensivos si el texto es demasiado largo */
+  padding: 0.75rem; /* Agrega espaciado dentro de las celdas */
+}
+
+th {
+  text-align: left; /* Alineación del texto en los encabezados */
+}
+
+td {
+  text-align: left; /* Alineación del texto en las celdas */
+}
+

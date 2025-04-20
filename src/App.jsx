@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { db } from "./firebase";
-import { collection, addDoc, getDocs, query, where, deleteDoc, doc, updateDoc } from "firebase/firestore";
-import './index.css';
+import {
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  where,
+  deleteDoc,
+  doc,
+  updateDoc
+} from "firebase/firestore";
+import "./index.css";
 
 export default function App() {
   const [tipo, setTipo] = useState("");
@@ -10,37 +19,46 @@ export default function App() {
   const [estado, setEstado] = useState("");
   const [fechaIngreso, setFechaIngreso] = useState("");
   const [comentario, setComentario] = useState("");
-  const [comentarioFalla, setComentarioFalla] = useState([]);
+  const [comentarioFalla, setComentarioFalla] = useState(""); // Cambiado a cadena
   const [mostrarSoloConFalla, setMostrarSoloConFalla] = useState(false);
   const [mostrarSoloEnObservacion, setMostrarSoloEnObservacion] = useState(false);
   const [busquedaNumero, setBusquedaNumero] = useState("");
   const [activos, setActivos] = useState([]);
-  const [mostrarFallas, setMostrarFallas] = useState(false); // Estado para mostrar/ocultar la sección de fallas
-  const [editarActivo, setEditarActivo] = useState(null); // Estado para almacenar el activo a editar
+  const [editarActivo, setEditarActivo] = useState(null);
 
   const tipos = ["Cámara", "Lector", "CPU", "Estación de llamadas", "Amplificador"];
-  const fallas = ["Pendiente de repuesto", "Pendiente de revisión de Logicalis", "Pendiente de infraestructura"];
+  const fallas = [
+    "Pendiente de repuesto",
+    "Pendiente de revisión de Logicalis",
+    "Pendiente de infraestructura"
+  ];
 
   const campoNumeroLabel =
-    tipo === "Lector" ? "N° Lector" :
-    tipo === "Cámara" ? "N° Cámara" :
-    tipo === "CPU" ? "N° CPU" :
-    tipo === "Estación de llamadas" ? "N° Estación" :
-    tipo === "Amplificador" ? "N° Amplificador" : "N° Equipo";
+    tipo === "Lector"
+      ? "N° Lector"
+      : tipo === "Cámara"
+      ? "N° Cámara"
+      : tipo === "CPU"
+      ? "N° CPU"
+      : tipo === "Estación de llamadas"
+      ? "N° Estación"
+      : tipo === "Amplificador"
+      ? "N° Amplificador"
+      : "N° Equipo";
 
   const guardarActivo = async (e) => {
     e.preventDefault();
     if (!tipo || !numero || !ubicacion || !estado || !fechaIngreso) return;
 
-    const data = { 
-      tipo, 
-      numero, 
-      campoNumero: campoNumeroLabel, 
-      ubicacion, 
-      estado, 
-      fechaIngreso, 
+    const data = {
+      tipo,
+      numero,
+      campoNumero: campoNumeroLabel,
+      ubicacion,
+      estado,
+      fechaIngreso,
       comentario,
-      comentarioFalla 
+      comentarioFalla
     };
 
     try {
@@ -51,7 +69,13 @@ export default function App() {
       } else {
         await addDoc(collection(db, "activos"), data);
       }
-      setTipo(""); setNumero(""); setUbicacion(""); setEstado(""); setFechaIngreso(""); setComentario(""); setComentarioFalla([]);
+      setTipo("");
+      setNumero("");
+      setUbicacion("");
+      setEstado("");
+      setFechaIngreso("");
+      setComentario("");
+      setComentarioFalla(""); // Resetear el comentarioFalla
       obtenerActivos();
     } catch (error) {
       console.error("Error al guardar el activo:", error);
@@ -68,10 +92,10 @@ export default function App() {
     }
 
     const datos = await getDocs(consulta);
-    const activosFiltrados = datos.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const activosFiltrados = datos.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
     if (busquedaNumero.trim() !== "") {
-      const filtrados = activosFiltrados.filter(activo =>
+      const filtrados = activosFiltrados.filter((activo) =>
         activo.numero.toLowerCase().includes(busquedaNumero.toLowerCase())
       );
       setActivos(filtrados);
@@ -97,8 +121,8 @@ export default function App() {
     setEstado(activo.estado);
     setFechaIngreso(activo.fechaIngreso);
     setComentario(activo.comentario);
-    setComentarioFalla(activo.comentarioFalla);
-    setEditarActivo(activo); // Establecer el activo a editar
+    setComentarioFalla(activo.comentarioFalla || ""); // Cambiado a cadena
+    setEditarActivo(activo);
   };
 
   useEffect(() => {
@@ -109,45 +133,50 @@ export default function App() {
     <div className="min-h-screen bg-gray-100 flex justify-center items-start py-10 px-4">
       <div className="w-full max-w-4xl bg-white p-6 rounded-lg shadow-lg">
         <h1 className="text-3xl font-bold text-center mb-6">Registro de Fallas</h1>
-        <form onSubmit={guardarActivo} className="space-y-4 w-full md:w-3/4 lg:w-2/3 mx-auto">
-          {/* Selección tipo de activo */}
+        <form
+          onSubmit={guardarActivo}
+          className="space-y-4 w-full md:w-3/4 lg:w-2/3 mx-auto"
+        >
           <div className="w-full">
-            <label className="block text-gray-700 font-medium mb-2">Selecciona tipo de activo</label>
+            <label className="block text-gray-700 font-medium mb-2">
+              Selecciona tipo de activo
+            </label>
             <select
               value={tipo}
-              onChange={e => setTipo(e.target.value)}
+              onChange={(e) => setTipo(e.target.value)}
               required
               className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Seleccione tipo de activo</option>
-              {tipos.map(t => <option key={t} value={t}>{t}</option>)}
+              {tipos.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
             </select>
           </div>
 
-          {/* Campo de número */}
           <input
             type="text"
             placeholder={campoNumeroLabel}
             value={numero}
-            onChange={e => setNumero(e.target.value)}
+            onChange={(e) => setNumero(e.target.value)}
             required
             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
-          {/* Ubicación */}
           <input
             type="text"
             placeholder="Ubicación"
             value={ubicacion}
-            onChange={e => setUbicacion(e.target.value)}
+            onChange={(e) => setUbicacion(e.target.value)}
             required
             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
-          {/* Estado */}
           <select
             value={estado}
-            onChange={e => setEstado(e.target.value)}
+            onChange={(e) => setEstado(e.target.value)}
             required
             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
@@ -156,53 +185,41 @@ export default function App() {
             <option value="En falla">En falla</option>
           </select>
 
-          {/* Fecha de ingreso */}
           <input
             type="date"
             value={fechaIngreso}
-            onChange={e => setFechaIngreso(e.target.value)}
+            onChange={(e) => setFechaIngreso(e.target.value)}
             required
             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
-          {/* Mostrar solo si el estado es "En falla" */}
           {estado === "En falla" && (
             <div className="w-full mt-4">
-              <label className="block text-gray-700 font-medium mb-2">Selecciona tipo de falla</label>
-              <button 
-                type="button" 
-                onClick={() => setMostrarFallas(!mostrarFallas)} 
-                className="w-full text-left p-3 bg-blue-500 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              <label className="block text-gray-700 font-medium mb-2">
+                Selecciona tipo de falla
+              </label>
+              <select
+                value={comentarioFalla} // Cambio aquí para que sea solo un valor
+                onChange={(e) => setComentarioFalla(e.target.value)} // Solo un valor
+                className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                {mostrarFallas ? "Ocultar opciones de falla" : "Selecciona tipo de falla"}
-              </button>
+                <option value="">Seleccione tipo de falla</option>
+                {fallas.map((falla) => (
+                  <option key={falla} value={falla}>
+                    {falla}
+                  </option>
+                ))}
+              </select>
 
-              {/* Si se selecciona mostrar, se despliega la sección de fallas */}
-              {mostrarFallas && (
-                <div className="mt-4">
-                  <select
-                    multiple
-                    value={comentarioFalla}
-                    onChange={e => setComentarioFalla(Array.from(e.target.selectedOptions, option => option.value))}
-                    className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    {fallas.map(falla => (
-                      <option key={falla} value={falla}>{falla}</option>
-                    ))}
-                  </select>
-
-                  <textarea
-                    placeholder="Comentario de falla (opcional)"
-                    value={comentario}
-                    onChange={e => setComentario(e.target.value)}
-                    className="w-full p-3 border rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-              )}
+              <textarea
+                placeholder="Comentario de falla (opcional)"
+                value={comentario}
+                onChange={(e) => setComentario(e.target.value)}
+                className="w-full p-3 border rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
             </div>
           )}
 
-          {/* Botón de guardar */}
           <button
             type="submit"
             className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -211,13 +228,12 @@ export default function App() {
           </button>
         </form>
 
-        {/* Filtros de búsqueda */}
         <div className="mt-6 flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6 justify-center">
           <label className="flex items-center space-x-2">
             <input
               type="checkbox"
               checked={mostrarSoloConFalla}
-              onChange={e => {
+              onChange={(e) => {
                 setMostrarSoloConFalla(e.target.checked);
                 if (e.target.checked) setMostrarSoloEnObservacion(false);
               }}
@@ -230,7 +246,7 @@ export default function App() {
             <input
               type="checkbox"
               checked={mostrarSoloEnObservacion}
-              onChange={e => {
+              onChange={(e) => {
                 setMostrarSoloEnObservacion(e.target.checked);
                 if (e.target.checked) setMostrarSoloConFalla(false);
               }}
@@ -240,52 +256,53 @@ export default function App() {
           </label>
         </div>
 
-        {/* Buscador por número */}
         <div className="mt-4 flex justify-center">
           <input
             type="text"
             placeholder="Buscar por número"
             value={busquedaNumero}
-            onChange={e => setBusquedaNumero(e.target.value)}
+            onChange={(e) => setBusquedaNumero(e.target.value)}
             className="w-full p-3 border rounded-lg max-w-md"
           />
         </div>
 
-        {/* Tabla de activos */}
         <div className="mt-6 overflow-x-auto">
           <table className="w-full border-collapse shadow-md mx-auto">
             <thead className="bg-blue-100">
               <tr>
-                <th className="border-2 px-4 py-2 text-left">Tipo</th>
-                <th className="border-2 px-4 py-2 text-left">N° Equipo</th>
-                <th className="border-2 px-4 py-2 text-left">Ubicación</th>
-                <th className="border-2 px-4 py-2 text-left">Estado</th>
-                <th className="border-2 px-4 py-2 text-left">Fecha de Ingreso</th>
-                <th className="border-2 px-4 py-2 text-left">Comentario</th>
-                <th className="border-2 px-4 py-2 text-left">Acciones</th>
+                <th className="border-2 px-4 py-2 text-center">Tipo</th>
+                <th className="border-2 px-4 py-2 text-center">N° Equipo</th>
+                <th className="border-2 px-4 py-2 text-center">Ubicación</th>
+                <th className="border-2 px-4 py-2 text-center">Estado</th>
+                <th className="border-2 px-4 py-2 text-center">Fecha de Ingreso</th>
+                <th className="border-2 px-4 py-2 text-center">Comentario</th>
+                <th className="border-2 px-4 py-2 text-center">Acciones</th>
               </tr>
             </thead>
             <tbody>
-              {activos.map(activo => (
+              {activos.map((activo) => (
                 <tr key={activo.id} className="odd:bg-white even:bg-gray-50">
                   <td className="border-2 px-4 py-2">{activo.tipo}</td>
-                  <td className="border-2 px-4 py-2">{activo.numero || "-"}</td>
+                  <td className="border-2 px-4 py-2">{activo.numero}</td>
                   <td className="border-2 px-4 py-2">{activo.ubicacion}</td>
-                  <td className={`border-2 px-4 py-2 ${activo.estado === "En falla" ? "text-red-600 font-semibold" : "text-yellow-600 font-semibold"}`}>
-                    {activo.estado}
-                  </td>
+                  <td className="border-2 px-4 py-2">{activo.estado}</td>
                   <td className="border-2 px-4 py-2">{activo.fechaIngreso}</td>
-                  <td className="border-2 px-4 py-2">{activo.comentario || "Ninguno"}</td>
                   <td className="border-2 px-4 py-2">
+                    {Array.isArray(activo.comentarioFalla)
+                      ? activo.comentarioFalla.join(", ")
+                      : activo.comentarioFalla}
+                    {activo.comentario && ` (${activo.comentario})`}
+                  </td>
+                  <td className="border-2 px-4 py-2 space-x-2">
                     <button
                       onClick={() => editar(activo)}
-                      className="bg-yellow-500 text-white py-1 px-4 rounded-md hover:bg-yellow-600"
+                      className="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-2 rounded"
                     >
                       Editar
                     </button>
                     <button
                       onClick={() => eliminarActivo(activo.id)}
-                      className="bg-red-600 text-white py-1 px-4 rounded-md hover:bg-red-700 ml-2"
+                      className="bg-red-500 hover:bg-red-600 text-white py-1 px-2 rounded"
                     >
                       Eliminar
                     </button>
