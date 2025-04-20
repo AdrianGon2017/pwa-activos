@@ -52,7 +52,7 @@ export default function App() {
 
   return (
     <div className="p-4 max-w-6xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Registro de Activos</h1>
+      <h1 className="text-2xl font-bold mb-4">Registro de Fallas</h1>
       <form onSubmit={guardarActivo} className="space-y-4">
         <select value={tipo} onChange={e => setTipo(e.target.value)} required className="w-full p-2 border rounded">
           <option value="">Seleccione tipo de activo</option>
